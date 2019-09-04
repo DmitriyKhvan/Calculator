@@ -1,0 +1,8 @@
+.reset {
+  width: 100%;
+}
+
+.reset button.btn-outline-secondary {
+  margin-top: 0.3rem;
+  width: 100%
+}

@@ -1,0 +1,9 @@
+.numbersAndRes {
+  float: left;
+  width: 75%;
+}
+
+.numbersAndRes button:not(.btn-outline-success){
+  margin: 0.1rem;
+  width: 2.9rem;
+}
