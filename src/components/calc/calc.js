@@ -16,11 +16,11 @@ export default class Calc extends Component {
 
     console.log(result, item);
 
-    if(result === "Алё! Деление на ноль!" && isNaN(item)) {
+    if(result === "Деление на ноль!" && isNaN(item)) {
       this.setState((state) => {
         return {result: 0 + item};
       });
-    } else if ((typeof result == "number" && typeof item == "number") || result === "Алё! Деление на ноль!") {
+    } else if ((typeof result == "number" && typeof item == "number") || result === "Деление на ноль!") {
 
       console.log(1);
 
@@ -65,7 +65,7 @@ export default class Calc extends Component {
       switch (arr[1]) {
         case "/":
             if(arr[2] === "0") {
-              return state.result = "Алё! Деление на ноль!"
+              return state.result = "Деление на ноль!"
             } else {
               return state.result = (+arr[0] / +arr[2]).toFixed(15) + ` ${arr[3]} `;
             }
@@ -109,7 +109,7 @@ export default class Calc extends Component {
         switch (arr[1]) {
           case "/":
               if(arr[2] === "0") {
-                return state.result = "Алё! Деление на ноль!"
+                return state.result = "Деление на ноль!"
               } else {
                 return state.result = (+arr[0] / +arr[2]).toFixed(15);
               }
