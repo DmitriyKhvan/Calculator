@@ -1,159 +1,101 @@
-import React, { Component } from 'react';
-import Numbers from '../numbers';
-import Actions from '../actions';
-import Success from '../success';
-import Reset from '../reset';
-//import actionRules from '../actions-rules';
+import React, { Component } from "react";
+import Numbers from "../numbers";
+import Actions from "../actions";
+import Success from "../success";
+import Reset from "../reset";
+import actionRules from "../actions-rules";
 
 export default class Calc extends Component {
-
   state = {
     result: "0"
-  }
+  };
 
-  onItemSelect = (item) => {
-    const {result} = this.state;
+  onItemSelect = item => {
+    const { result } = this.state;
 
-    console.log(result, item);
+    if (result === "Деление на ноль!" && typeof item == "string") { // add action after division by zero
 
-    if(result === "Деление на ноль!" && isNaN(item)) {
-      this.setState((state) => {
-        return {result: 0 + item};
-      });
-    } else if ((typeof result == "number" && typeof item == "number") || result === "Деление на ноль!") {
+      this.setState({ result: 0 + item });
 
-      console.log(1);
+    } else if (
+      (typeof result == "number" && typeof item == "number") ||
+      result === "Деление на ноль!"
+    ) {//change number or division by zero
 
-      this.setState((state) => {
-        return {result: item + "" };
-      });   
+      this.setState({ result: item });
 
-    } else if (typeof result == "number" && typeof item == "string") {
+    } else if (typeof result == "number" && typeof item == "string") { //add action
 
-      console.log(2);
-      this.setState((state) => {
-        return {result: result + item };
-      });
+      this.setState({ result: result + item });
 
-    } else if((result.slice(-1) === " " && isNaN(item)) || (result[0] === "0" && result.length === 1 && !isNaN(item))) {
-      console.log(3);
+    } else if (result.slice(-1) === " " && typeof item == "string") { //change action
+
       item = result.slice(0, -3) + item;
+      this.setState({ result: item });
 
-      this.setState((state) => {
-        return {result: item };
+    } else if (
+      (result[0] === "0" && result.length === 1 && typeof item == "number") ||
+      (result.slice(-1) === "0" &&
+      typeof item == "number" &&
+        result[result.length - 2] === " ")
+    ) { //change 0
+
+      item = result.slice(0, -1) + item;
+      this.setState({ result: item });
+
+    } else { // add number
+
+      this.setState(state => {
+        return { result: state.result + item };
       });
 
-    } else {
-      
-      this.setState((state) => {
-        console.log('хранил ',state.result, 'символ ',item);
-        return {result: state.result + item };
-      });
     }
+  };
 
-  }
-  
-  onActionSelect = (item) => {
-    this.onItemSelect(item);
-    
-    this.setState((state) => {
-    const str = state.result+""; 
-    let arr = [];
-    arr = str.split(' ');
-    if (arr.length === 5) {
-      //actionRules(arr, state);
-      switch (arr[1]) {
-        case "/":
-            if(arr[2] === "0") {
-              return state.result = "Деление на ноль!"
-            } else {
-              return state.result = (+arr[0] / +arr[2]).toFixed(15) + ` ${arr[3]} `;
-            }
-            
-        case "*":
-            return state.result = +arr[0] * +arr[2] + ` ${arr[3]} `;
-              
-        case "+":
-            return state.result = +arr[0] + +arr[2] + ` ${arr[3]} `;
-              
-        case "-":
-            return  state.result = +arr[0] - +arr[2] + ` ${arr[3]} `;
-              
-        default:
-          return state.result;
+  parseStateAndAction = (state) => {
+    const stringState = state.result+"";
+      const arrayState = stringState.split(" ");
+      if (arrayState.length === 5 || (arrayState.length === 3 && arrayState[2] !== "")) {
+        actionRules(arrayState, state);
       }
-      
-    }
-    });
-
   }
+
+  onActionSelect = item => {
+    this.onItemSelect(item);
+
+    this.setState(state => {
+      this.parseStateAndAction(state);
+    });
+  };
 
   onResetSelect = () => {
-    this.setState((state) => {
-      return {
-        result: '0'
-      }
-    });
-  }
+    this.setState({result: "0"});
+  };
 
   onSuccessSelect = () => {
-    this.setState((state) => {
-      const str = state.result+"";
-      let arr = [];
-      arr = str.split(' ');
+    this.setState(state => {
+      this.parseStateAndAction(state);
+    });
 
-      if (arr.length === 3 && arr[2] !== "") {
-
-        console.log("когда равно! ",arr[3]);
-        //actionRules(arr, state);
-        switch (arr[1]) {
-          case "/":
-              if(arr[2] === "0") {
-                return state.result = "Деление на ноль!"
-              } else {
-                return state.result = (+arr[0] / +arr[2]).toFixed(15);
-              }
-        
-          case "*":
-              return state.result = +arr[0] * +arr[2];
-                
-          case "+":
-              return state.result = +arr[0] + +arr[2];
-                
-          case "-":
-              return  state.result = +arr[0] - +arr[2];
-                
-          default:
-            return state.result;
-        }
-        
-      }
-      });   
-      
-      
-  }
+    this.forceUpdate();
+  };
 
   render() {
-    
-    const { result } = this.state;  
+    const { result } = this.state;
 
-    console.log('render ',result);
+    console.log("render ", result);
     return (
       <div id="calc">
-        <div className="screen text-right">{ result }</div>
+        <div className="screen text-right">{result}</div>
         <div className="desc">
           <div className="numbersAndRes">
-            <Numbers onItemSelect = {this.onItemSelect}/>
-            <Success onSuccessSelect = {this.onSuccessSelect} />
+            <Numbers onItemSelect={this.onItemSelect} />
+            <Success onSuccessSelect={this.onSuccessSelect} />
           </div>
-          <Actions onActionSelect = {this.onActionSelect}/>
-         
+          <Actions onActionSelect={this.onActionSelect} />
         </div>
-        <Reset onResetSelect = {this.onResetSelect}/>
+        <Reset onResetSelect={this.onResetSelect} />
       </div>
-       
     );
-  };
+  }
 }
-
-

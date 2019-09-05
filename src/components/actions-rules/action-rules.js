@@ -1,29 +1,27 @@
 
-const actionRules = (arr, state) => {
+const actionRules = (arrayState, state) => {
  
-  let action = 0;
-  if (arr[3]) {
-    
-    action = ` ${arr[3]} `;
+  let item = 0;
+  if (arrayState[3]) {
+    item = ` ${arrayState[3]} `;
   }
   
-  switch (arr[1]) {
+  switch (arrayState[1]) {
     case "/":
-        if(arr[2] === "0") {
-          return state.result = "Алё! Деление на ноль!"
+        if(arrayState[2] === "0") {
+          return state.result = "Деление на ноль!"
         } else {
-          return state.result = (+arr[0] / +arr[2]).toFixed(15) + action;
+          return state.result = +(+arrayState[0] / +arrayState[2]).toFixed(15) + item;
         }
         
     case "*":
-        return state.result = +arr[0] * +arr[2] + action;
+        return state.result = +arrayState[0] * +arrayState[2] + item;
           
     case "+":
-        console.log(state.result = +arr[0] + +arr[2] + action);
-        return state.result = +arr[0] + +arr[2] + action;
+        return state.result = +arrayState[0] + +arrayState[2] + item;
           
     case "-":
-        return  state.result = +arr[0] - +arr[2] + action;
+        return  state.result = +arrayState[0] - +arrayState[2] + item;
           
     default:
       return state.result;
