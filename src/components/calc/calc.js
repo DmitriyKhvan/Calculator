@@ -6,23 +6,33 @@ import Reset from "../reset";
 import actionRules from "../actions-rules";
 
 export default class Calc extends Component {
+
+  _DIVISION_BY_ZERO = "Деление на ноль!";
+              _ZERO = "0";
+  _RESULT_END = 3;
+  _RESULT_CONTINUE = 5;            
+
   state = {
-    result: "0"
+    result: this._ZERO
   };
+
+  
 
   onItemSelect = item => {
     const { result } = this.state;
 
-    if (result === "Деление на ноль!" && typeof item == "string") { // add action after division by zero
+    
 
-      this.setState({ result: 0 + item });
+    if (result === this._DIVISION_BY_ZERO && typeof item == "string") { // add action after division by zero
+
+      this.setState({ result: this._ZERO + item });
 
     } else if (
       (typeof result == "number" && typeof item == "number") ||
-      result === "Деление на ноль!"
+      result === this._DIVISION_BY_ZERO
     ) {//change number or division by zero
 
-      this.setState({ result: item });
+      this.setState({ result: item+"" });
 
     } else if (typeof result == "number" && typeof item == "string") { //add action
 
@@ -34,8 +44,8 @@ export default class Calc extends Component {
       this.setState({ result: item });
 
     } else if (
-      (result[0] === "0" && result.length === 1 && typeof item == "number") ||
-      (result.slice(-1) === "0" &&
+      (result.slice(0) === this._ZERO && result.length === 1 && typeof item == "number") ||
+      (result.slice(-1) === this._ZERO &&
       typeof item == "number" &&
         result[result.length - 2] === " ")
     ) { //change 0
@@ -53,27 +63,30 @@ export default class Calc extends Component {
   };
 
   parseStateAndAction = (state) => {
-    const stringState = state.result+"";
-      const arrayState = stringState.split(" ");
-      if (arrayState.length === 5 || (arrayState.length === 3 && arrayState[2] !== "")) {
-        actionRules(arrayState, state);
+    const stringResult = state.result+"";
+      const parseResultToArray = stringResult.split(" ");
+      let [secondNumber] = parseResultToArray[2];
+      if(secondNumber === undefined) secondNumber = "";
+      
+      if (parseResultToArray.length === this._RESULT_CONTINUE || (parseResultToArray.length === this._RESULT_END && secondNumber !== "")) {
+        actionRules(parseResultToArray, state,  this._DIVISION_BY_ZERO, this._ZERO);
       }
   }
 
-  onActionSelect = item => {
+  onActionSelect = (item) => {
     this.onItemSelect(item);
 
-    this.setState(state => {
+    this.setState((state) => {
       this.parseStateAndAction(state);
     });
   };
 
   onResetSelect = () => {
-    this.setState({result: "0"});
+    this.setState({result: this._ZERO});
   };
 
   onSuccessSelect = () => {
-    this.setState(state => {
+    this.setState((state) => {
       this.parseStateAndAction(state);
     });
 

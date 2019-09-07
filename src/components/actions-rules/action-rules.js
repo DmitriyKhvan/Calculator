@@ -1,27 +1,27 @@
 
-const actionRules = (arrayState, state) => {
+const actionRules = ([fistNumber, firstAction, secondNumber, secondAction], state, _DIVISION_BY_ZERO, _ZERO) => {
  
   let item = 0;
-  if (arrayState[3]) {
-    item = ` ${arrayState[3]} `;
+  if (secondAction) {
+    item = ` ${secondAction} `;
   }
   
-  switch (arrayState[1]) {
+  switch (firstAction) {
     case "/":
-        if(arrayState[2] === "0") {
-          return state.result = "Деление на ноль!"
+        if(secondNumber === _ZERO) {
+          return state.result = _DIVISION_BY_ZERO
         } else {
-          return state.result = +(+arrayState[0] / +arrayState[2]).toFixed(15) + item;
+          return state.result = +(+fistNumber / +secondNumber).toFixed(15) + item;
         }
         
     case "*":
-        return state.result = +arrayState[0] * +arrayState[2] + item;
+        return state.result = +fistNumber * +secondNumber + item;
           
     case "+":
-        return state.result = +arrayState[0] + +arrayState[2] + item;
+        return state.result = +fistNumber + +secondNumber + item;
           
     case "-":
-        return  state.result = +arrayState[0] - +arrayState[2] + item;
+        return  state.result = +fistNumber - +secondNumber + item;
           
     default:
       return state.result;
