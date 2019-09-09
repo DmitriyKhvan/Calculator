@@ -9,19 +9,16 @@ export default class Calc extends Component {
 
   _DIVISION_BY_ZERO = "Деление на ноль!";
               _ZERO = "0";
-  _RESULT_END = 3;
-  _RESULT_CONTINUE = 5;            
+        _RESULT_END = 3;
+   _RESULT_CONTINUE = 4;            
 
   state = {
     result: this._ZERO
   };
 
-  
 
   onItemSelect = item => {
     const { result } = this.state;
-
-    
 
     if (result === this._DIVISION_BY_ZERO && typeof item == "string") { // add action after division by zero
 
@@ -36,12 +33,21 @@ export default class Calc extends Component {
 
     } else if (typeof result == "number" && typeof item == "string") { //add action
 
-      this.setState({ result: result + item });
+      if(item === "."){
+        this.setState({ result: 0 + item });
+      } else {
+        this.setState({ result: result + item });
+      }
 
     } else if (result.slice(-1) === " " && typeof item == "string") { //change action
 
-      item = result.slice(0, -3) + item;
-      this.setState({ result: item });
+      if(item === "."){
+        item = 0 + item;
+        this.setState({ result: result + item });
+      } else {
+        item = result.slice(0, -3) + item;
+        this.setState({ result: item });
+      }
 
     } else if (
       (result.slice(0) === this._ZERO && result.length === 1 && typeof item == "number") ||
@@ -64,11 +70,9 @@ export default class Calc extends Component {
 
   parseStateAndAction = (state) => {
     const stringResult = state.result+"";
-      const parseResultToArray = stringResult.split(" ");
-      let [secondNumber] = parseResultToArray[2];
-      if(secondNumber === undefined) secondNumber = "";
-      
-      if (parseResultToArray.length === this._RESULT_CONTINUE || (parseResultToArray.length === this._RESULT_END && secondNumber !== "")) {
+      const parseResultToArray = stringResult.trim().split(" ");
+
+      if (parseResultToArray.length === this._RESULT_CONTINUE || parseResultToArray.length === this._RESULT_END ) {
         actionRules(parseResultToArray, state,  this._DIVISION_BY_ZERO, this._ZERO);
       }
   }
