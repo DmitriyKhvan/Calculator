@@ -4,7 +4,7 @@ import './success.css'
 const Success = ({onSuccessSelect}) => {
   return (
     <button className="btn btn-outline-success btn-lg"
-      onClick = {() => onSuccessSelect()}
+      onClick = {() => onSuccessSelect(".")}
     >
       =
     </button>

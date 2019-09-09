@@ -3,6 +3,7 @@ import Numbers from "../numbers";
 import Actions from "../actions";
 import Success from "../success";
 import Reset from "../reset";
+import Fractions from '../fractions';
 import actionRules from "../actions-rules";
 
 export default class Calc extends Component {
@@ -59,6 +60,11 @@ export default class Calc extends Component {
       item = result.slice(0, -1) + item;
       this.setState({ result: item });
 
+    } else if(result.slice(-1) === "." && typeof item == "string") {
+      
+      item = result.slice(0, -1) + item;
+      this.setState({ result:  item});
+
     } else { // add number
 
       this.setState(state => {
@@ -97,6 +103,26 @@ export default class Calc extends Component {
     this.forceUpdate();
   };
 
+  onFractionSelect = (item) => {
+
+    const result = this.state.result+""; 
+    const parseResultToArray = result.trim().split(" ");
+    const [firstNumber, , secondNumber] = parseResultToArray;
+
+    if(result.indexOf(".") !== -1){
+      if (parseResultToArray.length === 1){
+        if(firstNumber.indexOf(".") !== -1) return;
+      } else if(parseResultToArray.length === 3){
+        if(secondNumber.indexOf(".") !== -1) return;
+      } else {
+      this.onItemSelect(item);
+    }
+    }else {
+      this.onItemSelect(item);
+    }
+    
+  }
+
   render() {
     const { result } = this.state;
 
@@ -107,6 +133,7 @@ export default class Calc extends Component {
         <div className="desc">
           <div className="numbersAndRes">
             <Numbers onItemSelect={this.onItemSelect} />
+            <Fractions onFractionSelect={this.onFractionSelect} />
             <Success onSuccessSelect={this.onSuccessSelect} />
           </div>
           <Actions onActionSelect={this.onActionSelect} />

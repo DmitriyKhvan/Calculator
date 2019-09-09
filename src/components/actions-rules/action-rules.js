@@ -8,7 +8,7 @@ const actionRules = ([fistNumber, firstAction, secondNumber, secondAction], stat
   
   switch (firstAction) {
     case "/":
-        if(secondNumber === _ZERO) {
+        if(+secondNumber === +_ZERO) {
           return state.result = _DIVISION_BY_ZERO
         } else {
           return state.result = +(+fistNumber / +secondNumber).toFixed(15) + item;
